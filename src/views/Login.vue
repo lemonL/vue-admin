@@ -57,6 +57,8 @@ export default {
             console.log(res)
             // 如果成功
             if (res.meta.status === 200) {
+              // 将token保存到localStorage
+              localStorage.setItem('myToken', res.data.token)
               this.$router.push({name: 'Home'})
             } else {
               this.$message({

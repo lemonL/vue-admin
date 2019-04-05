@@ -10,5 +10,6 @@ export default {
 }
 </script>
 
-<style>
+<style tyle lang="scss" >
+@import './styles/index.scss'
 </style>
