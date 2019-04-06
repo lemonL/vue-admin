@@ -32,7 +32,8 @@
           <div class="system-title">电商后台管理系统</div>
           <div>
             <span class="welcome">
-              xxx用户
+            <!-- Vuex 获取用户名 -->
+            {{$store.getters.getUserName}}
             </span>
             <el-button type="text" @click="logOut()">退出</el-button>
           </div>
