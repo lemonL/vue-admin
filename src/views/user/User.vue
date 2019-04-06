@@ -12,11 +12,13 @@
     <el-row>
       <el-col :span="24">
         <el-input
+          v-model="queryParam"
           placeholder="请输入内容"
           class="search-input"
         >
           <el-button
             slot="append"
+            @click="initList"
             icon="el-icon-search"
           ></el-button>
         </el-input>
@@ -85,11 +87,11 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="1"
+        :page-sizes="[1, 2, 3, 4]"
+        :page-size="1"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
       >
       </el-pagination>
     </el-row>
@@ -101,10 +103,10 @@ export default {
   data () {
     return {
       userList: [],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
+      total: 0,
+      pagesize: 1,
+      pagenum: 1,
+      queryParam: '',
       value3: true
     }
   },
@@ -114,14 +116,19 @@ export default {
   methods: {
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
+      this.pagesize = val
+      this.initList()
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
+      this.pagenum = val
+      this.initList()
     },
     initList () {
-      getUserList({ params: { query: '', pagenum: 1, pagesize: 3 } }).then(res => {
+      getUserList({ params: { query: this.queryParam, pagenum: this.pagenum, pagesize: this.pagesize } }).then(res => {
         console.log(res)
         this.userList = res.data.users
+        this.total = res.data.total
       })
     }
   }

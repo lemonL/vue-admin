@@ -101,7 +101,7 @@ export default {
     height: 60px;
     // background: url(../assets/logo1.png);
     background-size: cover;
-    background-color: #989898;
+    background-color: #545c64;
   }
   .toggle-btn {
     font-size: 36px;
