@@ -22,7 +22,10 @@
             icon="el-icon-search"
           ></el-button>
         </el-input>
-        <el-button size="medium">添加用户</el-button>
+        <el-button
+          size="medium"
+          @click="addDialog=true"
+        >添加用户</el-button>
       </el-col>
     </el-row>
     <el-row class="table">
@@ -101,10 +104,71 @@
       >
       </el-pagination>
     </el-row>
+    <div class="Dialog">
+      <el-dialog
+        title="添加用户"
+        :visible.sync="addDialog"
+      >
+        <el-form
+          :model="addForm"
+          :rules="rules"
+          ref="addUserSubmit"
+        >
+          <el-form-item
+            label="用户名"
+            prop="username"
+          >
+            <el-input
+              v-model="addForm.username"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="密码"
+            prop="password"
+          >
+            <el-input
+              v-model="addForm.password"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="邮箱"
+            prop="email"
+          >
+            <el-input
+              v-model="addForm.email"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="电话"
+            prop="mobile"
+          >
+            <el-input
+              v-model="addForm.mobile"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button @click="addDialog = false">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="addUserSubmit('addUserSubmit')"
+          >确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+
   </div>
+
 </template>
 <script>
-import { getUserList, changeUserState } from '@/api'
+import { getUserList, changeUserState, addUser } from '@/api'
 export default {
   data () {
     return {
@@ -112,7 +176,35 @@ export default {
       total: 0,
       pagesize: 1,
       pagenum: 1,
-      queryParam: ''
+      queryParam: '',
+      addDialog: false,
+      addForm: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        email: [
+          {
+            required: true,
+            message: '请输入邮箱地址',
+            trigger: 'blur'
+          },
+          {
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: 'blur,change'
+          }
+        ],
+        mobile: [{ required: true, message: '电话不能为空' }]
+      }
     }
   },
   created () {
@@ -150,6 +242,29 @@ export default {
           this.$message({
             message: '状态更改失败',
             type: 'warning'
+          })
+        }
+      })
+    },
+    addUserSubmit (formName) {
+      this.$refs[formName].validate(valide => {
+        if (valide) {
+          // 添加用户
+          addUser(this.addForm).then(res => {
+            console.log(res.data)
+            if (res.meta.status === 201) {
+              this.$message({
+                message: '增加用户成功',
+                type: 'success'
+              })
+              this.addDialog = false
+            } else {
+              this.$message({
+                message: '增加用户失败',
+                type: 'success'
+              })
+            }
+            this.initList()
           })
         }
       })

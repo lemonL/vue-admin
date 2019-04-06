@@ -27,3 +27,7 @@ export const changeUserState = params => {
   // ES6语法
   return axios.put(`users/${params.uid}/state/${params.type}`).then(res => res.data)
 }
+// 新增用户
+export const addUser = params => {
+  return axios.post('users', params).then(res => res.data)
+}
