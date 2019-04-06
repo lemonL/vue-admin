@@ -4,21 +4,22 @@
       <!-- 侧边栏 -->
       <el-aside width="auto">
         <div class="logo"></div>
-        <el-menu default-active="1"
-        :router="true"
+        <el-menu
         class="el-menu-admin"
+        default-active="/user"
         @open="handleOpen"
         @close="handleClose"
         background-color="#545c64"
         text-color="#fff"
         :collapse="isCollapse"
+        :router="true"
         active-text-color="#ffd04b">
-          <el-submenu index="1">
+          <el-submenu index="">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </template>
-            <el-menu-item >
+            <el-menu-item index="/user">
               <i class="el-icon-menu"></i>
               <span slot="title">用户列表</span>
             </el-menu-item>
