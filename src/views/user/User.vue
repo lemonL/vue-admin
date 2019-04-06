@@ -32,15 +32,18 @@
         style="width: 100%"
       >
         <el-table-column
-          type="index"
-          width="50"
+          prop="id"
+          label="id"
+          width="80"
         >
         </el-table-column>
         <el-table-column
-          prop="username"
-          label="姓名"
+          label="用户名"
           width="180"
         >
+          <template slot-scope="scope">
+            <el-tag size="medium">{{ scope.row.username }}</el-tag>
+          </template>
         </el-table-column>
         <el-table-column
           prop="email"
@@ -55,7 +58,10 @@
         </el-table-column>
         <el-table-column label="用户状态">
           <template slot-scope="scope">
-            <el-switch v-model="value3">
+            <el-switch
+              v-model="scope.row.mg_state"
+              @change="changeUserState(scope.row)"
+            >
             </el-switch>
           </template>
         </el-table-column>
@@ -98,7 +104,7 @@
   </div>
 </template>
 <script>
-import { getUserList } from '@/api'
+import { getUserList, changeUserState } from '@/api'
 export default {
   data () {
     return {
@@ -106,8 +112,7 @@ export default {
       total: 0,
       pagesize: 1,
       pagenum: 1,
-      queryParam: '',
-      value3: true
+      queryParam: ''
     }
   },
   created () {
@@ -129,6 +134,24 @@ export default {
         console.log(res)
         this.userList = res.data.users
         this.total = res.data.total
+      })
+    },
+    // 改变用户状态
+    changeUserState (row) {
+      console.log(row)
+      changeUserState({ uid: row.id, type: row.mg_state }).then(res => {
+        console.log(res)
+        if (res.meta.status === 200) {
+          this.$message({
+            message: '状态更改成功',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: '状态更改失败',
+            type: 'warning'
+          })
+        }
       })
     }
   }

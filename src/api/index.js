@@ -22,3 +22,8 @@ export const getUserList = params => {
   // users 代表请求路径 /users
   return axios.get('users', params).then(res => res.data)
 }
+// 改变用户状态
+export const changeUserState = params => {
+  // ES6语法
+  return axios.put(`users/${params.uid}/state/${params.type}`).then(res => res.data)
+}
