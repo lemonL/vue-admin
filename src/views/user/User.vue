@@ -30,6 +30,7 @@
     </el-row>
     <el-row class="table">
       <el-table
+        v-loading="loading"
         :data="userList"
         border
         style="width: 100%"
@@ -276,6 +277,7 @@ export default {
         email: '',
         mobile: ''
       },
+      loading: true,
       editDialog: false,
       editForm: {
         username: '',
@@ -325,10 +327,12 @@ export default {
       this.initList()
     },
     initList () {
+      this.loading = true
       getUserList({ params: { query: this.queryParam, pagenum: this.pagenum, pagesize: this.pagesize } }).then(res => {
         console.log(res)
         this.userList = res.data.users
         this.total = res.data.total
+        this.loading = false
       })
     },
     // 改变用户状态
@@ -432,20 +436,27 @@ export default {
       })
     },
     grantUserSubmit () {
-      grantUserRole({ id: this.grantForm.id, rid: this.roleId }).then(res => {
-        if (res.meta.status === 200) {
-          this.$message({
-            type: 'success',
-            message: '分配角色成功!'
-          })
-          this.grantDialog = false
-        } else {
-          this.$message({
-            message: '分配角色失败',
-            type: 'warning'
-          })
-        }
-      })
+      if (!this.roleId) {
+        this.$message({
+          message: '角色不能为空',
+          type: 'warning'
+        })
+      } else {
+        grantUserRole({ id: this.grantForm.id, rid: this.roleId }).then(res => {
+          if (res.meta.status === 200) {
+            this.$message({
+              type: 'success',
+              message: '分配角色成功!'
+            })
+            this.grantDialog = false
+          } else {
+            this.$message({
+              message: '分配角色失败',
+              type: 'warning'
+            })
+          }
+        })
+      }
     }
   }
 }
